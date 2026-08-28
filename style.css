@@ -54,14 +54,20 @@ html, body {
 .slide video {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* preenche a tela sem distorcer, cortando o excesso */
+  /* "contain" mostra a arte/foto inteira, sem cortar nada (muitas peças já
+     trazem preço e texto perto da borda) - eventuais barras pretas nas
+     laterais são preferíveis a cortar a promoção. */
+  object-fit: contain;
+  background: #000;
   display: block;
 }
 
-/* Efeito Ken Burns: zoom lento contínuo aplicado somente em imagens.
-   De 100% até ~114% de escala, com leve translação, ao longo da duração
-   do slide. A animação é iniciada via JS (classe .kenburns) para poder
-   ajustar a duração dinamicamente conforme o tempo do slide. */
+/* Efeito Ken Burns: zoom lento e sutil aplicado somente em imagens.
+   De 100% até ~106% de escala, com leve translação, ao longo da duração
+   do slide. Mantido discreto para não empurrar o conteúdo para fora do
+   quadro (a imagem já ocupa a tela inteira via "contain"). A animação é
+   iniciada via JS (classe .kenburns) para poder ajustar a duração
+   dinamicamente conforme o tempo do slide. */
 .slide img.kenburns {
   animation-name: kenburns;
   animation-timing-function: linear;
@@ -73,15 +79,13 @@ html, body {
     transform: scale(1) translate(0, 0);
   }
   100% {
-    transform: scale(1.14) translate(-2%, -2%);
+    transform: scale(1.06) translate(-1%, -1%);
   }
 }
 
-/* Slide de abertura (logo): não corta a imagem (contain) e pulsa suavemente
-   em vez do zoom contínuo do Ken Burns, usado nas fotos de produto. */
+/* Slide de abertura (logo): pulsa suavemente em vez do zoom contínuo do
+   Ken Burns, usado nas fotos de produto. */
 .slide img.pulso-slide {
-  object-fit: contain;
-  background: #000;
   animation-name: pulso-slide;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;

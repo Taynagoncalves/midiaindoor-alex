@@ -148,6 +148,26 @@ var SLIDES = [
       media.addEventListener("loadedmetadata", function () {
         aoFicarPronto();
       });
+
+      // Mesmo vídeo tocando desfocado atrás, preenchendo as laterais quando
+      // o vídeo é mais "vertical" que a tela (ex: gravado no celular).
+      fundo = document.createElement("video");
+      fundo.className = "slide-fundo";
+      fundo.muted = true;
+      fundo.autoplay = true;
+      fundo.loop = true;
+      fundo.playsInline = true;
+      fundo.setAttribute("playsinline", "");
+      fundo.controls = false;
+      fundo.preload = "auto";
+      fundo.src = slide.arquivo;
+      var promessaFundo = fundo.play();
+      if (promessaFundo && typeof promessaFundo.catch === "function") {
+        promessaFundo.catch(function () {
+          // Autoplay bloqueado - sem problema, só não terá o preenchimento
+          // desfocado atrás; o vídeo principal continua funcionando normal.
+        });
+      }
     } else {
       media = document.createElement("img");
       media.addEventListener("load", function () {

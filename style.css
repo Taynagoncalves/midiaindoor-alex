@@ -66,11 +66,9 @@ html, body {
   display: block;
 }
 
-/* Camada de fundo: a mesma foto, ampliada e desfocada, preenchendo as
-   laterais que sobram quando a proporção da arte não bate com a tela -
-   em vez da barra preta, a cor de fundo passa a "puxar" da própria imagem.
-   Só existe para fotos (ver script.js); vídeos ficam sobre o preto do
-   .slide mesmo. */
+/* Camada de fundo: a mesma foto/vídeo, ampliada e desfocada, preenchendo
+   as laterais que sobram quando a proporção da mídia não bate com a tela -
+   em vez da barra preta, a cor de fundo passa a "puxar" da própria mídia. */
 .slide-fundo {
   position: absolute;
   inset: 0;

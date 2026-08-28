@@ -176,9 +176,14 @@ var SLIDES = [
         aoFicarPronto();
       });
 
-      // Slide da logo (abertura): fundo branco liso, sem desfoque da
-      // própria logo atrás dela.
-      if (slide.efeito !== "pulso") {
+      if (slide.efeito === "pulso") {
+        // Slide da logo (abertura): usa a arte de fundo dedicada, nítida
+        // (sem desfoque), em vez do preenchimento desfocado das fotos.
+        fundo = document.createElement("img");
+        fundo.className = "slide-fundo slide-fundo-nitido";
+        fundo.alt = "";
+        fundo.src = "midia/fundo-logo.png";
+      } else {
         fundo = document.createElement("img");
         fundo.className = "slide-fundo";
         fundo.alt = "";

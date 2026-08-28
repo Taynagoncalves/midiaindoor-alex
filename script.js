@@ -126,36 +126,47 @@ var SLIDES = [
   }
 
   // --------------------------------------------------------------------
-  // Criação do elemento de mídia (img ou video) dentro de uma camada
+  // Criação dos elementos de mídia dentro de uma camada.
+  // Para imagens, cria também uma camada de fundo (mesma foto, ampliada e
+  // desfocada) que preenche as laterais quando a arte não tem a mesma
+  // proporção da tela, em vez de deixar barra preta. Vídeos usam só a
+  // mídia principal, sobre o preto do próprio .slide.
   // --------------------------------------------------------------------
-  function criarElementoMidia(slide, aoFicarPronto, aoFalhar) {
-    var elemento;
+  function criarElementosMidia(slide, aoFicarPronto, aoFalhar) {
+    var fundo = null;
+    var media;
 
     if (slide.tipo === "video") {
-      elemento = document.createElement("video");
-      elemento.muted = true;
-      elemento.autoplay = true;
-      elemento.playsInline = true; // evita fullscreen automático em alguns Android
-      elemento.setAttribute("playsinline", ""); // compatibilidade extra
-      elemento.controls = false;
-      elemento.preload = "auto";
+      media = document.createElement("video");
+      media.muted = true;
+      media.autoplay = true;
+      media.playsInline = true; // evita fullscreen automático em alguns Android
+      media.setAttribute("playsinline", ""); // compatibilidade extra
+      media.controls = false;
+      media.preload = "auto";
 
-      elemento.addEventListener("loadedmetadata", function () {
-        aoFicarPronto(elemento);
+      media.addEventListener("loadedmetadata", function () {
+        aoFicarPronto();
       });
     } else {
-      elemento = document.createElement("img");
-      elemento.addEventListener("load", function () {
-        aoFicarPronto(elemento);
+      media = document.createElement("img");
+      media.addEventListener("load", function () {
+        aoFicarPronto();
       });
+
+      fundo = document.createElement("img");
+      fundo.className = "slide-fundo";
+      fundo.alt = "";
+      fundo.src = slide.arquivo;
     }
 
-    elemento.addEventListener("error", function () {
+    media.className = "slide-media";
+    media.addEventListener("error", function () {
       aoFalhar();
     });
+    media.src = slide.arquivo;
 
-    elemento.src = slide.arquivo;
-    return elemento;
+    return { fundo: fundo, media: media };
   }
 
   // --------------------------------------------------------------------
@@ -185,19 +196,20 @@ var SLIDES = [
       }, atraso);
     }
 
-    var elementoMidia = criarElementoMidia(
+    var elementos = criarElementosMidia(
       slide,
       function aoFicarPronto() {
         if (jaAvancou) return; // mídia demorou e já desistimos dela
         falhasSeguidas = 0;
-        exibirCamadaComMidia(slide, elementoMidia, irParaProximo);
+        exibirCamadaComMidia(slide, elementos.media, irParaProximo);
       },
       function aoFalhar() {
         irParaProximo();
       }
     );
 
-    camadaOculta.appendChild(elementoMidia);
+    if (elementos.fundo) camadaOculta.appendChild(elementos.fundo);
+    camadaOculta.appendChild(elementos.media);
   }
 
   // --------------------------------------------------------------------

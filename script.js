@@ -36,7 +36,7 @@ var CONFIG_LOGO = {
 //             vale o tempo real do vídeo (ele não é cortado).
 var SLIDES = [
   { tipo: "imagem", arquivo: "midia/logo-pitstop.jpeg", efeito: "pulso", duracao: 4 },
-  { tipo: "imagem", arquivo: "midia/primeira.jpeg", efeito: "kenburns", duracao: 6 },
+  { tipo: "imagem", arquivo: "midia/primeira.png", efeito: "kenburns", duracao: 6 },
   { tipo: "imagem", arquivo: "midia/terca.jpeg", efeito: "kenburns", duracao: 6 },
   { tipo: "imagem", arquivo: "midia/quarta.jpeg", efeito: "kenburns", duracao: 6 },
   { tipo: "video", arquivo: "midia/quarta.mp4", duracao: 8 },

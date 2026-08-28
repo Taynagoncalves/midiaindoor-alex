@@ -19,7 +19,7 @@
 // posicao: um dos valores abaixo
 //   "superior-esquerdo" | "superior-direito" | "inferior-esquerdo" | "inferior-direito"
 var CONFIG_LOGO = {
-  arquivo: "midia/logo-pitstop.jpeg",
+  arquivo: "midia/logo-pitstop.png",
   posicao: "superior-direito"
 };
 
@@ -35,7 +35,7 @@ var CONFIG_LOGO = {
 //             Para vídeos, se o vídeo for mais longo que "duracao",
 //             vale o tempo real do vídeo (ele não é cortado).
 var SLIDES = [
-  { tipo: "imagem", arquivo: "midia/logo-pitstop.jpeg", efeito: "pulso", duracao: 4 },
+  { tipo: "imagem", arquivo: "midia/logo-pitstop.png", efeito: "pulso", duracao: 4 },
   { tipo: "imagem", arquivo: "midia/primeira.png", efeito: "kenburns", duracao: 6 },
   { tipo: "imagem", arquivo: "midia/terca.jpeg", efeito: "kenburns", duracao: 6 },
   { tipo: "imagem", arquivo: "midia/quarta.jpeg", efeito: "kenburns", duracao: 6 },

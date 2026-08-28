@@ -54,6 +54,12 @@ html, body {
   background: #000; /* aparece só atrás de vídeos, que não têm camada de fundo */
 }
 
+/* Slide de abertura (logo): fundo branco liso em vez do desfoque da
+   própria imagem atrás dela. */
+.slide.fundo-branco {
+  background: #fff;
+}
+
 /* Mídia principal: sempre inteira na tela (contain), sem cortar nada -
    muitas peças já trazem preço e texto perto da borda. */
 .slide-media {

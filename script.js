@@ -174,10 +174,14 @@ var SLIDES = [
         aoFicarPronto();
       });
 
-      fundo = document.createElement("img");
-      fundo.className = "slide-fundo";
-      fundo.alt = "";
-      fundo.src = slide.arquivo;
+      // Slide da logo (abertura): fundo branco liso, sem desfoque da
+      // própria logo atrás dela.
+      if (slide.efeito !== "pulso") {
+        fundo = document.createElement("img");
+        fundo.className = "slide-fundo";
+        fundo.alt = "";
+        fundo.src = slide.arquivo;
+      }
     }
 
     media.className = "slide-media";
@@ -198,6 +202,7 @@ var SLIDES = [
     var slide = SLIDES[indice];
 
     camadaOculta.innerHTML = "";
+    camadaOculta.classList.toggle("fundo-branco", slide.efeito === "pulso");
 
     var jaAvancou = false;
     function irParaProximo() {

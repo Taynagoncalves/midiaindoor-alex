@@ -1,0 +1,177 @@
+/* ==========================================================================
+   Pit Stop Lanches - Painel de Mídia Indoor
+   Estilos gerais + animações (Ken Burns, crossfade, cascata de texto, pulso)
+
+   IMPORTANTE: todas as animações usam apenas "transform" e "opacity".
+   Essas propriedades são leves (não forçam reflow), o que é essencial para
+   rodar bem em TV boxes Android com hardware fraco.
+   ========================================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden; /* nunca deve aparecer barra de rolagem no painel */
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+}
+
+/* ==========================================================================
+   Palco: área onde os slides (foto ou vídeo) ficam empilhados
+   ========================================================================== */
+
+#palco {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  /* Crossfade entre slides: 0.6s, nem rápido nem chamativo */
+  transition: opacity 0.6s ease-in-out;
+  overflow: hidden;
+}
+
+.slide.ativo {
+  opacity: 1;
+  z-index: 2;
+}
+
+.slide.saindo {
+  opacity: 0;
+  z-index: 1;
+}
+
+.slide img,
+.slide video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* preenche a tela sem distorcer, cortando o excesso */
+  display: block;
+}
+
+/* Efeito Ken Burns: zoom lento contínuo aplicado somente em imagens.
+   De 100% até ~114% de escala, com leve translação, ao longo da duração
+   do slide. A animação é iniciada via JS (classe .kenburns) para poder
+   ajustar a duração dinamicamente conforme o tempo do slide. */
+.slide img.kenburns {
+  animation-name: kenburns;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes kenburns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.14) translate(-2%, -2%);
+  }
+}
+
+/* Slide de abertura (logo): não corta a imagem (contain) e pulsa suavemente
+   em vez do zoom contínuo do Ken Burns, usado nas fotos de produto. */
+.slide img.pulso-slide {
+  object-fit: contain;
+  background: #000;
+  animation-name: pulso-slide;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes pulso-slide {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* ==========================================================================
+   Logo da marca: fixa em um canto, com pulso sutil contínuo
+   ========================================================================== */
+
+#logo-marca {
+  position: fixed;
+  max-width: 12vw;
+  max-height: 12vh;
+  z-index: 5;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+  animation: pulso-logo 2.2s ease-in-out infinite;
+  display: none; /* fica visível via JS somente depois de carregar a logo */
+}
+
+/* Posições possíveis para a logo - controladas via JS (CONFIG_LOGO.posicao) */
+#logo-marca.canto-superior-esquerdo { top: 3vh; left: 3vw; }
+#logo-marca.canto-superior-direito  { top: 3vh; right: 3vw; }
+#logo-marca.canto-inferior-esquerdo { bottom: 3vh; left: 3vw; }
+#logo-marca.canto-inferior-direito  { bottom: 3vh; right: 3vw; }
+
+@keyframes pulso-logo {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* ==========================================================================
+   Indicadores de slide (bolinhas), discretos, parte inferior central
+   ========================================================================== */
+
+#indicadores {
+  position: fixed;
+  bottom: 1.2vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  gap: 0.6vw;
+}
+
+.indicador {
+  width: 0.7vw;
+  height: 0.7vw;
+  min-width: 6px;
+  min-height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.indicador.ativo {
+  background: #ffd400;
+  transform: scale(1.3);
+}
+
+/* ==========================================================================
+   Aviso de tela cheia
+   ========================================================================== */
+
+#aviso-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5vw;
+  font-size: 2vw;
+  z-index: 10;
+  cursor: pointer;
+  transition: opacity 0.6s ease-out;
+}
+
+#aviso-fullscreen.escondido {
+  opacity: 0;
+  pointer-events: none;
+}

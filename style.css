@@ -31,22 +31,42 @@ html, body {
   height: 100vh;
 }
 
+/* Vinheta sutil: escurece levemente os cantos da tela, acabamento comum em
+   painéis/TVs profissionais. Fica por cima de todos os slides, mas não
+   atrapalha a leitura do centro da imagem. */
+#palco::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.32) 100%);
+}
+
 .slide {
   position: absolute;
   inset: 0;
   opacity: 0;
-  /* Crossfade entre slides: 0.6s, nem rápido nem chamativo */
-  transition: opacity 0.6s ease-in-out;
+  /* Estado de espera: levemente ampliado, "assenta" no lugar quando entra.
+     Dá uma sensação mais cinematográfica que um fade seco. */
+  transform: scale(1.045);
+  /* Transição de 0.9s com curva "standard" (mesma usada em Material Design
+     e na maioria dos apps polidos): acelera rápido e desacelera suave. */
+  transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
 .slide.ativo {
   opacity: 1;
+  transform: scale(1);
   z-index: 2;
 }
 
 .slide.saindo {
   opacity: 0;
+  /* Recua sutilmente enquanto desaparece, em vez de só sumir no lugar. */
+  transform: scale(0.965);
   z-index: 1;
 }
 

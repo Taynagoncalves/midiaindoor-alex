@@ -63,7 +63,7 @@ var SLIDES = [
 (function () {
   "use strict";
 
-  var TRANSICAO_MS = 600; // precisa bater com "transition: opacity" do CSS
+  var TRANSICAO_MS = 900; // precisa bater com a duração da transição no CSS (.slide)
 
   var palco = document.getElementById("palco");
   var elIndicadores = document.getElementById("indicadores");

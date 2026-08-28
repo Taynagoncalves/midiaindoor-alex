@@ -44,6 +44,8 @@ var SLIDES = [
   { tipo: "imagem", arquivo: "midia/sexta.jpeg", efeito: "kenburns", duracao: 6 },
   { tipo: "video", arquivo: "midia/sexta.mp4", duracao: 8 },
   { tipo: "imagem", arquivo: "midia/nocidadexcoracao.jpeg", efeito: "kenburns", duracao: 6 },
+  { tipo: "imagem", arquivo: "midia/novidade-pernil.png", efeito: "kenburns", duracao: 6 },
+  { tipo: "imagem", arquivo: "midia/chopp.png", efeito: "kenburns", duracao: 6 },
   { tipo: "video", arquivo: "midia/batata-fritavideo.mp4", duracao: 8 },
   { tipo: "imagem", arquivo: "midia/batatareal.jpeg", efeito: "kenburns", duracao: 6 },
   { tipo: "imagem", arquivo: "midia/batatreal.jpeg", efeito: "kenburns", duracao: 6 },

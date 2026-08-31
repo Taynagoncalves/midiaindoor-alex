@@ -1,39 +1,16 @@
-/* ==========================================================================
-   Pit Stop Lanches - Painel de Mídia Indoor (slideshow)
+// painel de midia do Pit Stop - slideshow simples em JS puro
 
-   COMO EDITAR:
-   1. Preencha o array SLIDES abaixo com seus produtos reais (arquivos já
-      devem estar na pasta /midia).
-   2. Ajuste CONFIG_LOGO com o arquivo e o canto onde a logo deve aparecer.
-   3. Não precisa mexer no resto do arquivo para o uso básico.
+// pra trocar a logo ou os slides é só mexer aqui embaixo, não precisa
+// tocar no resto do arquivo
 
-   Compatibilidade: escrito em JavaScript "clássico" (ES6 simples), sem
-   recursos muito recentes, para funcionar bem em WebView/Chrome Android
-   mais antigos usados em TV boxes.
-   ========================================================================== */
-
-// --------------------------------------------------------------------------
-// CONFIGURAÇÃO DA LOGO DA MARCA (cantinho fixo, visível em todos os slides)
-// --------------------------------------------------------------------------
-// arquivo: caminho da imagem da logo dentro de /midia
-// posicao: um dos valores abaixo
-//   "superior-esquerdo" | "superior-direito" | "inferior-esquerdo" | "inferior-direito"
 var CONFIG_LOGO = {
   arquivo: "midia/logo-pitstop.png",
-  posicao: "superior-direito"
+  posicao: "superior-direito" // superior-esquerdo | superior-direito | inferior-esquerdo | inferior-direito
 };
 
-// --------------------------------------------------------------------------
-// ARRAY DE SLIDES
-// --------------------------------------------------------------------------
-// Campos de cada slide:
-//   tipo    : "imagem" ou "video"
-//   arquivo : caminho do arquivo dentro de /midia
-//   efeito  : "pulso" (zoom suave pulsando, usado na logo de abertura) ou
-//             "kenburns" (zoom lento contínuo, padrão para fotos de produto)
-//   duracao : tempo mínimo de exibição do slide, em segundos.
-//             Para vídeos, se o vídeo for mais longo que "duracao",
-//             vale o tempo real do vídeo (ele não é cortado).
+// lista de slides na ordem que aparecem. duracao é em segundos.
+// nos videos, se o video for mais longo que a duracao, ele toca inteiro
+// mesmo assim (não corta)
 var SLIDES = [
   { tipo: "imagem", arquivo: "midia/logo-pitstop.png", efeito: "pulso", duracao: 4 },
   { tipo: "imagem", arquivo: "midia/primeira.png", efeito: "kenburns", duracao: 6 },
@@ -56,22 +33,20 @@ var SLIDES = [
   { tipo: "imagem", arquivo: "midia/porcaoreal.jpeg", efeito: "kenburns", duracao: 6 }
 ];
 
-// ==========================================================================
-// A PARTIR DAQUI É O MOTOR DO SLIDESHOW - normalmente não precisa editar
-// ==========================================================================
+// daqui pra baixo é o motor do slideshow, não mexi mais nisso
 
 (function () {
   "use strict";
 
-  var TRANSICAO_MS = 900; // precisa bater com a duração da transição no CSS (.slide)
+  var TRANSICAO_MS = 900; // tem que ser igual ao tempo da transição lá no css
 
   var palco = document.getElementById("palco");
   var elIndicadores = document.getElementById("indicadores");
   var elLogo = document.getElementById("logo-marca");
   var elAvisoFullscreen = document.getElementById("aviso-fullscreen");
 
-  // Duas camadas reaproveitadas para o crossfade (em vez de criar uma
-  // camada nova por slide) - mantém o DOM leve, importante para TV box.
+  // uso só duas divs e fico reaproveitando elas pro crossfade, em vez de
+  // ficar criando uma nova a cada slide (roda mais leve na tv box)
   var camadaA = document.createElement("div");
   var camadaB = document.createElement("div");
   camadaA.className = "slide";
@@ -86,9 +61,6 @@ var SLIDES = [
   var timerAvanco = null;
   var falhasSeguidas = 0;
 
-  // --------------------------------------------------------------------
-  // Indicadores (bolinhas)
-  // --------------------------------------------------------------------
   function montarIndicadores() {
     elIndicadores.innerHTML = "";
     for (var i = 0; i < SLIDES.length; i++) {
@@ -109,9 +81,7 @@ var SLIDES = [
     }
   }
 
-  // --------------------------------------------------------------------
-  // Logo da marca (cantinho fixo)
-  // --------------------------------------------------------------------
+  // logo fixa no canto
   function montarLogo() {
     if (!CONFIG_LOGO.arquivo) return;
 
@@ -120,20 +90,14 @@ var SLIDES = [
       elLogo.style.display = "block";
     };
     elLogo.onerror = function () {
-      // Logo ainda não existe ou falhou - simplesmente não mostra,
-      // sem quebrar o resto do painel.
+      // se a logo não carregar não quero que quebre o resto, só esconde
       elLogo.style.display = "none";
     };
     elLogo.src = CONFIG_LOGO.arquivo;
   }
 
-  // --------------------------------------------------------------------
-  // Criação dos elementos de mídia dentro de uma camada.
-  // Para imagens, cria também uma camada de fundo (mesma foto, ampliada e
-  // desfocada) que preenche as laterais quando a arte não tem a mesma
-  // proporção da tela, em vez de deixar barra preta. Vídeos usam só a
-  // mídia principal, sobre o preto do próprio .slide.
-  // --------------------------------------------------------------------
+  // monta a imagem/video do slide + a camada de fundo desfocada que
+  // preenche os cantos quando a mídia não é do mesmo formato da tela
   function criarElementosMidia(slide, aoFicarPronto, aoFalhar) {
     var fundo = null;
     var media;
@@ -142,8 +106,8 @@ var SLIDES = [
       media = document.createElement("video");
       media.muted = true;
       media.autoplay = true;
-      media.playsInline = true; // evita fullscreen automático em alguns Android
-      media.setAttribute("playsinline", ""); // compatibilidade extra
+      media.playsInline = true; // pra não abrir em tela cheia sozinho no android
+      media.setAttribute("playsinline", "");
       media.controls = false;
       media.preload = "auto";
 
@@ -151,8 +115,8 @@ var SLIDES = [
         aoFicarPronto();
       });
 
-      // Mesmo vídeo tocando desfocado atrás, preenchendo as laterais quando
-      // o vídeo é mais "vertical" que a tela (ex: gravado no celular).
+      // mesmo video de novo, desfocado, tocando atrás (pra preencher os
+      // cantos quando o video é vertical)
       fundo = document.createElement("video");
       fundo.className = "slide-fundo";
       fundo.muted = true;
@@ -166,8 +130,7 @@ var SLIDES = [
       var promessaFundo = fundo.play();
       if (promessaFundo && typeof promessaFundo.catch === "function") {
         promessaFundo.catch(function () {
-          // Autoplay bloqueado - sem problema, só não terá o preenchimento
-          // desfocado atrás; o vídeo principal continua funcionando normal.
+          // se o autoplay for bloqueado não tem problema, só fica sem o fundo
         });
       }
     } else {
@@ -177,8 +140,8 @@ var SLIDES = [
       });
 
       if (slide.efeito === "pulso") {
-        // Slide da logo (abertura): usa a arte de fundo dedicada, nítida
-        // (sem desfoque), em vez do preenchimento desfocado das fotos.
+        // esse é o slide da logo, usa a arte de fundo própria em vez do
+        // desfoque automático
         fundo = document.createElement("img");
         fundo.className = "slide-fundo slide-fundo-nitido";
         fundo.alt = "";
@@ -200,9 +163,6 @@ var SLIDES = [
     return { fundo: fundo, media: media };
   }
 
-  // --------------------------------------------------------------------
-  // Controle principal: mostra o slide de índice "indice"
-  // --------------------------------------------------------------------
   function mostrarSlide(indice) {
     if (SLIDES.length === 0) return;
 
@@ -217,8 +177,8 @@ var SLIDES = [
       jaAvancou = true;
       falhasSeguidas++;
 
-      // Segurança: se todos os slides estiverem quebrados, evita loop
-      // infinito travando a aba - espera um pouco mais entre tentativas.
+      // se ficar quebrando tudo (arquivo com defeito etc) espera mais pra
+      // não ficar num loop maluco trocando de slide toda hora
       var atraso = falhasSeguidas >= SLIDES.length ? 3000 : 30;
 
       if (timerAvanco) clearTimeout(timerAvanco);
@@ -231,7 +191,7 @@ var SLIDES = [
     var elementos = criarElementosMidia(
       slide,
       function aoFicarPronto() {
-        if (jaAvancou) return; // mídia demorou e já desistimos dela
+        if (jaAvancou) return; // demorou demais e já pulou esse slide
         falhasSeguidas = 0;
         exibirCamadaComMidia(slide, elementos.media, irParaProximo);
       },
@@ -244,16 +204,11 @@ var SLIDES = [
     camadaOculta.appendChild(elementos.media);
   }
 
-  // --------------------------------------------------------------------
-  // Faz o crossfade e agenda o avanço para o próximo slide
-  // --------------------------------------------------------------------
   function exibirCamadaComMidia(slide, elementoMidia, irParaProximo) {
     if (slide.tipo === "imagem") {
-      var duracaoAnimacao = (slide.duracao || 6) + 1; // um pouco mais que o slide
+      var duracaoAnimacao = (slide.duracao || 6) + 1; // um pouco a mais que o slide
 
       if (slide.efeito === "pulso") {
-        // Logo de abertura: não corta a imagem (contain) e pulsa suavemente,
-        // em vez do zoom contínuo usado nas fotos de produto.
         elementoMidia.classList.add("pulso-slide");
         elementoMidia.style.animationDuration = "2.2s";
       } else {
@@ -262,7 +217,7 @@ var SLIDES = [
       }
     }
 
-    // Crossfade: mostra a camada oculta, esconde a anterior
+    // troca de slide: mostra o que tava escondido, esconde o que tava ativo
     camadaOculta.classList.add("ativo");
     camadaOculta.classList.remove("saindo");
     camadaAtiva.classList.remove("ativo");
@@ -270,13 +225,12 @@ var SLIDES = [
 
     atualizarIndicadores(indiceAtual);
 
-    // Troca qual camada é a "ativa" para a próxima rodada
     var temp = camadaAtiva;
     camadaAtiva = camadaOculta;
     camadaOculta = temp;
 
-    // Limpa a camada que acabou de sair, depois da transição de opacidade,
-    // para liberar memória de vídeos/imagens anteriores.
+    // depois que a transição termina, limpa a camada antiga pra não ficar
+    // com video/imagem ocupando memória à toa
     setTimeout(function () {
       camadaOculta.innerHTML = "";
     }, TRANSICAO_MS + 50);
@@ -293,15 +247,14 @@ var SLIDES = [
       var duracaoVideoMs = (elementoMidia.duration || 0) * 1000;
 
       if (duracaoVideoMs > duracaoSlideMs) {
-        // Vídeo mais longo que o tempo configurado: não corta o vídeo,
-        // toca inteiro uma vez e avança quando ele terminar.
+        // video maior que o tempo configurado - deixa tocar até o fim
         elementoMidia.loop = false;
         elementoMidia.addEventListener("ended", function aoTerminar() {
           elementoMidia.removeEventListener("ended", aoTerminar);
           irParaProximo();
         });
       } else {
-        // Vídeo mais curto: repete em loop até completar o tempo do slide.
+        // video mais curto - repete até bater o tempo do slide
         elementoMidia.loop = true;
         timerAvanco = setTimeout(irParaProximo, duracaoSlideMs);
       }
@@ -309,8 +262,7 @@ var SLIDES = [
       var promessaPlay = elementoMidia.play();
       if (promessaPlay && typeof promessaPlay.catch === "function") {
         promessaPlay.catch(function () {
-          // Autoplay bloqueado por algum motivo - ainda assim avança
-          // pelo tempo configurado, para não travar o painel.
+          // se travar o play por algum motivo, segue o baile mesmo assim
         });
       }
     } else {
@@ -318,9 +270,6 @@ var SLIDES = [
     }
   }
 
-  // --------------------------------------------------------------------
-  // Tela cheia
-  // --------------------------------------------------------------------
   function pedirFullscreen() {
     var docEl = document.documentElement;
     var pedido =
@@ -333,8 +282,8 @@ var SLIDES = [
       try {
         pedido.call(docEl);
       } catch (erro) {
-        // Navegador bloqueou por falta de interação do usuário - o aviso
-        // na tela cobre esse caso, pedindo para o usuário tocar/F11.
+        // navegador bloqueou (precisa de clique antes) - o aviso na tela
+        // já cobre esse caso
       }
     }
   }
@@ -352,16 +301,13 @@ var SLIDES = [
       elAvisoFullscreen.classList.add("escondido");
     });
 
-    // Esconde o aviso sozinho depois de um tempo, para não ficar
-    // atrapalhando um painel sem interação humana.
+    // some sozinho depois de um tempo pra não ficar atrapalhando quando
+    // ninguém vai clicar mesmo (painel ligado sozinho na tv)
     setTimeout(function () {
       elAvisoFullscreen.classList.add("escondido");
     }, 8000);
   }
 
-  // --------------------------------------------------------------------
-  // Início
-  // --------------------------------------------------------------------
   function iniciar() {
     if (!SLIDES || SLIDES.length === 0) {
       return;

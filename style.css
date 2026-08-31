@@ -1,11 +1,5 @@
-/* ==========================================================================
-   Pit Stop Lanches - Painel de Mídia Indoor
-   Estilos gerais + animações (Ken Burns, crossfade, cascata de texto, pulso)
-
-   IMPORTANTE: todas as animações usam apenas "transform" e "opacity".
-   Essas propriedades são leves (não forçam reflow), o que é essencial para
-   rodar bem em TV boxes Android com hardware fraco.
-   ========================================================================== */
+/* estilos do painel - as animações só usam transform e opacity de
+   propósito, pra rodar leve numa tv box fraca */
 
 * {
   margin: 0;
@@ -17,23 +11,18 @@ html, body {
   width: 100%;
   height: 100%;
   background: #000;
-  overflow: hidden; /* nunca deve aparecer barra de rolagem no painel */
+  overflow: hidden; /* não pode ter barra de rolagem no painel */
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
 }
 
-/* ==========================================================================
-   Palco: área onde os slides (foto ou vídeo) ficam empilhados
-   ========================================================================== */
-
+/* onde os slides ficam empilhados */
 #palco {
   position: relative;
   width: 100vw;
   height: 100vh;
 }
 
-/* Vinheta sutil: escurece levemente os cantos da tela, acabamento comum em
-   painéis/TVs profissionais. Fica por cima de todos os slides, mas não
-   atrapalha a leitura do centro da imagem. */
+/* vinheta bem sutil nos cantos, só pra dar um acabamento melhor */
 #palco::after {
   content: "";
   position: absolute;
@@ -47,11 +36,9 @@ html, body {
   position: absolute;
   inset: 0;
   opacity: 0;
-  /* Estado de espera: levemente ampliado, "assenta" no lugar quando entra.
-     Dá uma sensação mais cinematográfica que um fade seco. */
+  /* começa um pouco ampliado e "assenta" no lugar quando fica ativo,
+     fica mais bonito que só um fade */
   transform: scale(1.045);
-  /* Transição de 0.9s com curva "standard" (mesma usada em Material Design
-     e na maioria dos apps polidos): acelera rápido e desacelera suave. */
   transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
               transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
@@ -65,23 +52,21 @@ html, body {
 
 .slide.saindo {
   opacity: 0;
-  /* Recua sutilmente enquanto desaparece, em vez de só sumir no lugar. */
-  transform: scale(0.965);
+  transform: scale(0.965); /* recua um pouquinho enquanto some */
   z-index: 1;
 }
 
 .slide {
-  background: #000; /* aparece só atrás de vídeos, que não têm camada de fundo */
+  background: #000; /* só aparece atrás de video, que não tem camada de fundo */
 }
 
-/* Slide de abertura (logo): fundo branco liso como reserva, caso a arte
-   de fundo dedicada (fundo-logo.png) não carregue. */
+/* fundo branco de reserva pro slide da logo, caso a arte de fundo não carregue */
 .slide.fundo-branco {
   background: #fff;
 }
 
-/* Mídia principal: sempre inteira na tela (contain), sem cortar nada -
-   muitas peças já trazem preço e texto perto da borda. */
+/* a mídia principal sempre inteira na tela, sem cortar nada (várias artes
+   já vêm com preço/texto perto da borda) */
 .slide-media {
   position: absolute;
   inset: 0;
@@ -92,9 +77,9 @@ html, body {
   display: block;
 }
 
-/* Camada de fundo: a mesma foto/vídeo, ampliada e desfocada, preenchendo
-   as laterais que sobram quando a proporção da mídia não bate com a tela -
-   em vez da barra preta, a cor de fundo passa a "puxar" da própria mídia. */
+/* mesma foto/video de novo, ampliada e desfocada, atrás da principal -
+   preenche os cantos quando o formato não bate com a tela em vez de
+   deixar barra preta */
 .slide-fundo {
   position: absolute;
   inset: 0;
@@ -103,34 +88,25 @@ html, body {
   object-fit: cover;
   z-index: 0;
   display: block;
-  /* Escala um pouco maior que o quadro para o halo do blur não deixar
-     ver a borda nítida da imagem original. */
-  transform: scale(1.15);
+  transform: scale(1.15); /* um pouco maior pra não aparecer a borda do blur */
   filter: blur(3vw) brightness(0.55) saturate(1.3);
 }
 
-/* Variante nítida (sem desfoque nem escurecimento): usada na arte de fundo
-   dedicada do slide de abertura (fundo-logo.png), que já é uma peça
-   pronta, não uma foto de produto. */
+/* versão sem desfoque, usada só na arte de fundo da logo (essa já é uma
+   peça pronta, não precisa desfocar) */
 .slide-fundo.slide-fundo-nitido {
   transform: scale(1);
   filter: none;
 }
 
-/* Logo do slide de abertura: um pouco menor que a tela cheia, com a arte
-   de fundo dedicada aparecendo ao redor dela. */
+/* logo do slide de abertura menor que a tela, pra aparecer a arte de fundo em volta */
 .slide-media.pulso-slide {
   inset: 14%;
   width: 72%;
   height: 72%;
 }
 
-/* Efeito Ken Burns: zoom lento e sutil aplicado somente em imagens.
-   De 100% até ~106% de escala, com leve translação, ao longo da duração
-   do slide. Mantido discreto para não empurrar o conteúdo para fora do
-   quadro (a imagem já ocupa a tela inteira via "contain"). A animação é
-   iniciada via JS (classe .kenburns) para poder ajustar a duração
-   dinamicamente conforme o tempo do slide. */
+/* efeito ken burns - zoom bem devagar nas fotos de produto */
 .slide-media.kenburns {
   animation-name: kenburns;
   animation-timing-function: linear;
@@ -146,8 +122,7 @@ html, body {
   }
 }
 
-/* Slide de abertura (logo): pulsa suavemente em vez do zoom contínuo do
-   Ken Burns, usado nas fotos de produto. */
+/* pulso da logo de abertura, no lugar do ken burns */
 .slide-media.pulso-slide {
   animation-name: pulso-slide;
   animation-timing-function: ease-in-out;
@@ -160,10 +135,7 @@ html, body {
   100% { transform: scale(1); }
 }
 
-/* ==========================================================================
-   Logo da marca: fixa em um canto, com pulso sutil contínuo
-   ========================================================================== */
-
+/* logo fixa no canto, com pulso continuo */
 #logo-marca {
   position: fixed;
   max-width: 12vw;
@@ -171,10 +143,10 @@ html, body {
   z-index: 5;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
   animation: pulso-logo 2.2s ease-in-out infinite;
-  display: none; /* fica visível via JS somente depois de carregar a logo */
+  display: none; /* só aparece depois que carregar (via JS) */
 }
 
-/* Posições possíveis para a logo - controladas via JS (CONFIG_LOGO.posicao) */
+/* posição da logo, definida lá no CONFIG_LOGO do script.js */
 #logo-marca.canto-superior-esquerdo { top: 3vh; left: 3vw; }
 #logo-marca.canto-superior-direito  { top: 3vh; right: 3vw; }
 #logo-marca.canto-inferior-esquerdo { bottom: 3vh; left: 3vw; }
@@ -186,10 +158,7 @@ html, body {
   100% { transform: scale(1); }
 }
 
-/* ==========================================================================
-   Indicadores de slide (bolinhas), discretos, parte inferior central
-   ========================================================================== */
-
+/* bolinhas de progresso, embaixo no centro */
 #indicadores {
   position: fixed;
   bottom: 1.2vh;
@@ -215,10 +184,7 @@ html, body {
   transform: scale(1.3);
 }
 
-/* ==========================================================================
-   Aviso de tela cheia
-   ========================================================================== */
-
+/* aviso de tela cheia que aparece no começo */
 #aviso-fullscreen {
   position: fixed;
   top: 0;

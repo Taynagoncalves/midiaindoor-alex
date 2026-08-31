@@ -3,24 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>Pit Stop Lanches - Painel de Mídia Indoor</title>
-  <!-- Impede zoom/interação de toque, já que o painel roda sozinho na TV -->
+  <!-- tira o zoom no toque, o painel fica ligado sozinho na tv -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Palco onde os slides (imagem ou vídeo) são exibidos, um por cima do outro -->
+  <!-- os slides entram aqui dentro, o script.js que monta tudo -->
   <div id="palco">
-    <!-- Os slides (elementos .slide) são criados dinamicamente pelo script.js -->
   </div>
 
-  <!-- Logo fixa da marca, aparece em todos os slides -->
+  <!-- logo fixa no canto, aparece em cima de qualquer slide -->
   <img id="logo-marca" src="" alt="Logo Pit Stop Lanches">
 
-  <!-- Indicador discreto de progresso (bolinhas), uma por slide -->
+  <!-- bolinhas mostrando em qual slide tá -->
   <div id="indicadores"></div>
 
-  <!-- Aviso de tela cheia: some sozinho depois de alguns segundos ou ao clicar -->
+  <!-- pede pra ativar tela cheia, some sozinho depois de um tempo -->
   <div id="aviso-fullscreen">
     Toque na tela ou pressione F11 para ativar o modo tela cheia
   </div>

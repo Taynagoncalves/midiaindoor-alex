@@ -22,6 +22,7 @@ var SLIDES = [
   { tipo: "video", arquivo: "midia/sexta.mp4", duracao: 8 },
   { tipo: "imagem", arquivo: "midia/combo-sabado.jpeg", efeito: "kenburns", duracao: 6 },
   { tipo: "imagem", arquivo: "midia/combo-domingo.jpeg", efeito: "kenburns", duracao: 6 },
+  { tipo: "video", arquivo: "midia/video-tio.mp4", duracao: 8 },
   { tipo: "imagem", arquivo: "midia/nocidadexcoracao.jpeg", efeito: "kenburns", duracao: 6 },
   { tipo: "imagem", arquivo: "midia/novidade-pernil.png", efeito: "kenburns", duracao: 6 },
   { tipo: "imagem", arquivo: "midia/chopp.png", efeito: "kenburns", duracao: 6 },

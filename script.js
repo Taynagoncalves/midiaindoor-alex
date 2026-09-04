@@ -163,6 +163,18 @@ var SLIDES = [
     });
     media.src = slide.arquivo;
 
+    if (slide.tipo === "video") {
+      // já manda tocar aqui, com o video ainda escondido, pra quando a
+      // camada aparecer ele já estar rodando (senão pisca o botão de play
+      // do navegador por uma fração de segundo antes de começar)
+      var promessaMedia = media.play();
+      if (promessaMedia && typeof promessaMedia.catch === "function") {
+        promessaMedia.catch(function () {
+          // autoplay bloqueado - segue o baile, o play() em agendarAvanco tenta de novo
+        });
+      }
+    }
+
     return { fundo: fundo, media: media };
   }
 
